@@ -1,0 +1,30 @@
+---
+title: "ProyectoTD2026"
+author: "FJavierBailachCastilla"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN
+AL ESQUELETO mdpi modificado
+https://aulavirtual.uv.es/mod/resource/view.php?id=3579580
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#LIBRERÍAS
+```{r}
+###REVISAR EL ARCHIVO paketes.R
+```
+
+#CARGA DE DATOS
+```{r}
+library(readr)
+logdata <- read_csv("data/logs_moodle_anon.csv", 
+    na = "NA")
+
+head(logdata)
+tail(logdata)
+```
+
