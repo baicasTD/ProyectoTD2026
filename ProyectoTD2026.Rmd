@@ -16,6 +16,11 @@ knitr::opts_chunk$set(echo = TRUE)
 #LIBRERÍAS
 ```{r}
 ###REVISAR EL ARCHIVO paketes.R
+library(readr)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(forcats)
 ```
 
 #CARGA DE DATOS
@@ -26,5 +31,58 @@ logdata <- read_csv("data/logs_moodle_anon.csv",
 
 head(logdata)
 tail(logdata)
+```
+
+
+```{r}
+#Definimos una función llamada procesa_logs_moodle. Esta función está diseñada para leer, limpiar y transformar un archivo de logs de Moodle, convirtiendo los datos en un data frame estructurado y listo para su análisis. La función no utiliza realmente el algumento de entrada, ya que carga directamente el archivo csv predefinido con los logs.
+
+procesar_logs_moodle <- function(logdata) {
+  logdata <- read_csv("data/logs_moodle_anon.csv")
+  
+#Renombramos las columnas, para que sean más manejables, quitando espacios o cambiando los nombres más largos a otros más cortos
+  logdata <- logdata %>%
+    rename(
+      hora = `Hora`,
+      usuario = `Nombre completo del usuario`,
+      usuario_afectado = `Usuario afectado`,
+      contexto = `Contexto del evento`,
+      componente = `Componente`,
+      evento = `Nombre evento`,
+      descripcion = `Descripción`,
+      origen = `Origen`,
+      ip = `Dirección IP`
+    )
+
+  # Conversión variable Hora 
+  logdata <- logdata %>%
+    mutate(
+      hora = str_replace(hora, ",", ""), #elimino la coma 
+      hora = dmy_hms(hora), #texto en formato fecha-hora 
+    )
+
+
+  #Creación columnas fecha, hora_dia y dia_semana
+  logdata <- logdata %>%
+    mutate(
+      fecha = as_date(hora),
+      hora_dia = hour(hora),
+      dia_semana = wday(hora, label = TRUE)
+    )
+
+  # Ordeno los registros por fecha y hora de más antigup a más reciente
+  logdata <- logdata %>%
+    arrange(hora)
+
+  return(logdata)
+}
+```
+
+```{r}
+#Como se veria el dataset ya limpio y organizado
+logdata <- read_csv("data/logs_moodle_anon.csv")
+logs <- procesar_logs_moodle(logdata)
+
+
 ```
 
