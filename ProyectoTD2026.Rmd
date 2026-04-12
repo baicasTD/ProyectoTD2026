@@ -83,6 +83,36 @@ procesar_logs_moodle <- function(logdata) {
 logdata <- read_csv("data/logs_moodle_anon.csv")
 logs <- procesar_logs_moodle(logdata)
 
+```
+
+```{r}
+# Comprobamos que los tipos de las variables son correctos y vemos mediante summary si sus valores son coherentes para comprobar definitivamente.
+summary(logs)
+
+```
+
+```{r}
+#Analizamos los datos perdidos(NA) de cada una de las variables del .csv
+na_por_variable <- logs %>%
+  summarise(across(everything(), ~sum(is.na(.)))) %>%
+  pivot_longer(everything(), 
+               names_to = "variable", 
+               values_to = "n_NA") %>%
+  filter(n_NA > 0)
+
+na_por_variable
+```
+
+```{r}
+# Tabla 1: Número de eventos por componente
+#Esta tabla nos enseña mediante la frecuencia las zonas donde más tráfico hay a la hora del ingreso de un usuario en el aula virtual.
+tabla_componentes <- logs %>%
+  group_by(componente) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia)) %>%
+  rename(Componente = componente)
+
+tabla_componentes
 
 ```
 
