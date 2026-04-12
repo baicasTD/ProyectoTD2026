@@ -21,6 +21,7 @@ library(dplyr)
 library(lubridate)
 library(stringr)
 library(forcats)
+library(ggplot2)
 ```
 
 #CARGA DE DATOS
@@ -115,4 +116,23 @@ tabla_componentes <- logs %>%
 tabla_componentes
 
 ```
+
+#Figura
+```{r}
+# Figura 1: Una vez procesados los datos, resulta fundamental comprender temporalmente cómo interactúan los usuarios con la plataforma. 
+
+grafico_dias <- logs %>%
+  ggplot(aes(x = dia_semana)) +
+  geom_bar(fill = "steelblue", color = "black") +
+  labs(
+    title = "Figura 1: Actividad en el Aula Virtual por día de la semana",
+    x = "Día de la semana",
+    y = "Cantidad de eventos") 
+
+grafico_dias
+
+# Como se puede observar en el grafico, existe una mayor actividad en los dias de clase, que los dias de fin de semana.
+```
+
+
 
