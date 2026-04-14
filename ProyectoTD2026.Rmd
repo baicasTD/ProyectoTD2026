@@ -5,15 +5,14 @@ date: "`r Sys.Date()`"
 output: pdf_document
 ---
 
-ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN
-AL ESQUELETO mdpi modificado
-https://aulavirtual.uv.es/mod/resource/view.php?id=3579580
+ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN AL ESQUELETO mdpi modificado <https://aulavirtual.uv.es/mod/resource/view.php?id=3579580>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #LIBRERÍAS
+
 ```{r}
 ###REVISAR EL ARCHIVO paketes.R
 library(readr)
@@ -22,24 +21,17 @@ library(lubridate)
 library(stringr)
 library(forcats)
 library(ggplot2)
+library(tidyr)
 ```
 
-#CARGA DE DATOS
-```{r}
-library(readr)
-logdata <- read_csv("data/logs_moodle_anon.csv", 
-    na = "NA")
-
-head(logdata)
-tail(logdata)
-```
 
 
 ```{r}
 #Definimos una función llamada procesa_logs_moodle. Esta función está diseñada para leer, limpiar y transformar un archivo de logs de Moodle, convirtiendo los datos en un data frame estructurado y listo para su análisis. La función no utiliza realmente el algumento de entrada, ya que carga directamente el archivo csv predefinido con los logs.
 
-procesar_logs_moodle <- function(logdata) {
-  logdata <- read_csv("data/logs_moodle_anon.csv")
+procesar_logs_moodle <- function(ruta_archivo) {
+  #Carga de datos
+  logdata <- read_csv(ruta_archivo, na = "NA")
   
 #Renombramos las columnas, para que sean más manejables, quitando espacios o cambiando los nombres más largos a otros más cortos
   logdata <- logdata %>%
@@ -59,7 +51,7 @@ procesar_logs_moodle <- function(logdata) {
   logdata <- logdata %>%
     mutate(
       hora = str_replace(hora, ",", ""), #elimino la coma 
-      hora = dmy_hms(hora), #texto en formato fecha-hora 
+      hora = dmy_hms(hora) #texto en formato fecha-hora 
     )
 
 
@@ -70,7 +62,28 @@ procesar_logs_moodle <- function(logdata) {
       hora_dia = hour(hora),
       dia_semana = wday(hora, label = TRUE)
     )
+  
+  logdata <- logdata %>%
+  mutate(
+    tipo_ip = case_when(
+      is.na(ip) ~ NA_character_, #si la ip es NA
+      str_detect(ip, ":") ~ "IPv6", #contiene :
+      str_detect(ip, "\\.") ~ "IPv4", #contiene .
+      TRUE ~ "desconocida" #si no cumple nada
+    )
+  )
+  
 
+  # Codificación de variables categóricas
+  logdata <- logdata %>%
+    mutate(
+      componente = as.factor(componente),
+      evento = as.factor(evento),
+      contexto = as.factor(contexto),
+      origen = as.factor(origen),
+      dia_semana = as.factor(dia_semana)
+    )
+  
   # Ordeno los registros por fecha y hora de más antigup a más reciente
   logdata <- logdata %>%
     arrange(hora)
@@ -81,8 +94,8 @@ procesar_logs_moodle <- function(logdata) {
 
 ```{r}
 #Como se veria el dataset ya limpio y organizado
-logdata <- read_csv("data/logs_moodle_anon.csv")
-logs <- procesar_logs_moodle(logdata)
+
+logs <- procesar_logs_moodle("data/logs_moodle_anon.csv")
 
 ```
 
@@ -118,6 +131,7 @@ tabla_componentes
 ```
 
 #Figura
+
 ```{r}
 # Figura 1: Una vez procesados los datos, resulta fundamental comprender temporalmente cómo interactúan los usuarios con la plataforma. 
 
@@ -133,6 +147,3 @@ grafico_dias
 
 # Como se puede observar en el grafico, existe una mayor actividad en los dias de clase, que los dias de fin de semana.
 ```
-
-
-
