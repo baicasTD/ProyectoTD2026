@@ -21,6 +21,7 @@ library(dplyr)
 library(lubridate)
 library(stringr)
 library(forcats)
+library(tidyr)
 ```
 
 #CARGA DE DATOS
@@ -86,7 +87,7 @@ logs <- procesar_logs_moodle(logdata)
 ```
 
 ```{r}
-# Comprobamos que los tipos de las variables son correctos y vemos mediante summary si sus valores son coherentes para comprobar definitivamente.
+#Comprobamos que los tipos de las variables son correctos y vemos mediante summary si sus valores son coherentes.
 summary(logs)
 
 ```
@@ -104,7 +105,7 @@ na_por_variable
 ```
 
 ```{r}
-# Tabla 1: Número de eventos por componente
+#Tabla 1
 #Esta tabla nos enseña mediante la frecuencia las zonas donde más tráfico hay a la hora del ingreso de un usuario en el aula virtual.
 tabla_componentes <- logs %>%
   group_by(componente) %>%
