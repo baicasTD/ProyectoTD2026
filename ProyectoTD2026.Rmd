@@ -161,3 +161,5 @@ La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el 
 Como se puede observar, existe una mayor actividad en los dias lectivos, que los dias de fin de semana.
 
 
+
+
