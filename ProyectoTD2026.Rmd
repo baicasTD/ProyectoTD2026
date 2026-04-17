@@ -3,10 +3,10 @@ title: "Ejemplo de Tabla y Figura en RMarkdown"
 author: "Marcelino Martínez Sober"
 date: "`r Sys.Date()`"
 output:
-  bookdown::html_document2:
+  bookdown::pdf_document2:
     fig_caption: yes
     df_print: kable
-  bookdown::pdf_document2:
+  bookdown::html_document2:
     fig_caption: yes
     df_print: kable
 # output:
@@ -28,7 +28,8 @@ header-includes:
 
 # Documento RMarkdown con Referencias en Español
 
-**IMPORTANTE**: `dejar siempre al menos una línea entre la celda de código y el texto Rmarkdown. Sino no pondrá correctamente las referencias`
+**IMPORTANTE**: `dejar siempre al menos una línea entre la celda de código`
+`y el texto Rmarkdown. Sino no pondrá correctamente las referencias`
 
 ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN
 AL ESQUELETO mdpi modificado
@@ -47,11 +48,11 @@ library(lubridate)
 library(stringr)
 library(forcats)
 library(tidyr)
+library(rticles)
 ```
 
 #CARGA DE DATOS
 ```{r}
-library(readr)
 logdata <- read_csv("data/logs_moodle_anon.csv", 
     na = "NA")
 
@@ -59,14 +60,58 @@ head(logdata)
 tail(logdata)
 ```
 
+#INTRODUCCIÓN
+
+  La plataforma Moodle se ha vuelto el corazón de la universidad. 
+Lo más interesante es que sin darnos cuenta dejamos huella en ella cada vez que
+entramos. Nuestro equipo va a sacar información de ese caos de datos.
+
+Econtraremos números y registros brutos que no hay quien los entienda.
+
+¡Pero con el curso de Tratamiento de Datos estamos adquieriendo la capacidad de 
+conseguirlo!
+
+Nos centraremos en tres apartados:
+
+   Filtrar y ordenar los datos para tratar datos reales.
+   
+   Obtener conclusiones de los datos gracias a la información substraida.
+   
+   Graficar y crear dashboards fáciles de entender para el ojo humano.
+   
+El objetivo es que los profesores dejen de trabajar a ciegas.
+Con estos datos en mano podrán organizar las clases y los materiales sabiendo
+cómo interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
+
+#PREGUNTAS A RESPONDER:
+
+ 1.  ¿A qué hora del día se conetan más los alumnos?
+ 
+ 2.  ¿Qué días de la semana hay menos actividad en la plataforma? 
+ 
+ 3.  ¿Cuáles son los materiales o apartados que casi nadie utiliza?
+ 
+ 4.  ¿Los alumnos entran a Moodle antes de que empiece la clase o después?
+ 
+ 5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
+ 
+
+  
+
+#PROCESAMIENTO:
 
 ```{r}
-#Definimos una función llamada procesa_logs_moodle. Esta función está diseñada para leer, limpiar y transformar un archivo de logs de Moodle, convirtiendo los datos en un data frame estructurado y listo para su análisis. La función no utiliza realmente el algumento de entrada, ya que carga directamente el archivo csv predefinido con los logs.
+#Definimos una función llamada procesa_logs_moodle. Esta función está diseñada 
+#para leer, limpiar y transformar un archivo de logs de Moodle, convirtiendo los
+#datos en un data frame estructurado y listo para su análisis. 
+#La función no utiliza realmente el algumento de entrada,
+#ya que carga directamente el archivo csv predefinido con los logs.
 
 procesar_logs_moodle <- function(logdata) {
   logdata <- read_csv("data/logs_moodle_anon.csv")
   
-#Renombramos las columnas, para que sean más manejables, quitando espacios o cambiando los nombres más largos a otros más cortos
+#Renombramos las columnas, para que sean más manejables, quitando espacios o 
+#cambiando los nombres más largos a otros más cortos
   logdata <- logdata %>%
     rename(
       hora = `Hora`,
@@ -104,6 +149,8 @@ procesar_logs_moodle <- function(logdata) {
 }
 ```
 
+#DATASET LIMPIO:
+
 ```{r}
 #Como se veria el dataset ya limpio y organizado
 logdata <- read_csv("data/logs_moodle_anon.csv")
@@ -111,11 +158,16 @@ logs <- procesar_logs_moodle(logdata)
 
 ```
 
+#SUMMARY:
+
 ```{r}
-#Comprobamos que los tipos de las variables son correctos y vemos mediante summary si sus valores son coherentes.
+#Comprobamos que los tipos de las variables son correctos y vemos mediante 
+#summary si sus valores son coherentes.
 summary(logs)
 
 ```
+
+#ANÁLISIS DE NA's:
 
 ```{r}
 #Analizamos los datos perdidos(NA) de cada una de las variables del .csv
@@ -128,6 +180,8 @@ na_por_variable <- logs %>%
 
 na_por_variable
 ```
+
+#CREACIÓN DE LA TABLA:
 
 ```{r tabla-componentes}
 
@@ -143,7 +197,8 @@ knitr::kable(tabla_componentes,
 ```
 La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por componentes.
 
-Una vez procesados los datos, resulta fundamental comprender temporalmente cómo interactúan los usuarios con la plataforma. 
+Una vez procesados los datos, resulta fundamental comprender temporalmente cómo 
+interactúan los usuarios con la plataforma. 
 
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
 library(ggplot2)
@@ -158,5 +213,7 @@ grafico_dias <- logs %>%
 grafico_dias
 ```
 
-La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el aula virtual por día de la semana.
-Como se puede observar, existe una mayor actividad en los dias lectivos, que los dias de fin de semana.
+La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el
+aula virtual por día de la semana.
+Como se puede observar, existe una mayor actividad en los dias lectivos, 
+que los dias de fin de semana.
