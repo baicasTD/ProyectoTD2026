@@ -49,16 +49,22 @@ library(stringr)
 library(forcats)
 library(tidyr)
 library(rticles)
+library(kableExtra)
+library(ggplot2)
 ```
 
 #CARGA DE DATOS
+
 ```{r}
 logdata <- read_csv("data/logs_moodle_anon.csv", 
     na = "NA")
 
-head(logdata)
-tail(logdata)
+#head(logdata)
+#tail(logdata)
 ```
+El conjunto de datos inicial consta de 109746 registros y 9 variables, 
+correspondientes a eventos de la plataforma Moodle. 
+Las variables incluyen información temporal, de usuario y de contexto del evento.
 
 #INTRODUCCIÓN
 
@@ -191,9 +197,17 @@ tabla_componentes <- logs %>%
   arrange(desc(Frecuencia)) %>%
   rename(Componente = componente)
 
-knitr::kable(tabla_componentes, 
-             caption = "Apartados más visitados del Aula Virtual.", 
-             booktabs = TRUE)
+
+knitr::kable(
+  tabla_componentes,
+  caption = "Apartados más visitados del Aula Virtual.",
+  booktabs = TRUE
+) %>%
+  kable_styling(
+    latex_options = "scale_down",
+    font_size = 9
+  )
+
 ```
 La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por componentes.
 
@@ -201,7 +215,7 @@ Una vez procesados los datos, resulta fundamental comprender temporalmente cómo
 interactúan los usuarios con la plataforma. 
 
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
-library(ggplot2)
+
 grafico_dias <- logs %>%
   ggplot(aes(x = dia_semana)) +
   geom_bar(fill = "steelblue", color = "black") +
