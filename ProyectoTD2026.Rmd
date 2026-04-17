@@ -129,22 +129,24 @@ na_por_variable <- logs %>%
 na_por_variable
 ```
 
-```{r}
-#Tabla 1
-#Esta tabla nos enseña mediante la frecuencia las zonas donde más tráfico hay a la hora del ingreso de un usuario en el aula virtual.
+```{r tabla-componentes}
+
 tabla_componentes <- logs %>%
   group_by(componente) %>%
   summarise(Frecuencia = n()) %>%
   arrange(desc(Frecuencia)) %>%
   rename(Componente = componente)
 
-tabla_componentes
-
+knitr::kable(tabla_componentes, 
+             caption = "Apartados más visitados del Aula Virtual.", 
+             booktabs = TRUE)
 ```
+La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por componentes.
 
 Una vez procesados los datos, resulta fundamental comprender temporalmente cómo interactúan los usuarios con la plataforma. 
 
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
+library(ggplot2)
 grafico_dias <- logs %>%
   ggplot(aes(x = dia_semana)) +
   geom_bar(fill = "steelblue", color = "black") +
