@@ -1,9 +1,34 @@
 ---
-title: "ProyectoTD2026"
-author: "FJavierBailachCastilla"
+title: "Ejemplo de Tabla y Figura en RMarkdown"
+author: "Marcelino Martínez Sober"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  bookdown::html_document2:
+    fig_caption: yes
+    df_print: kable
+  bookdown::pdf_document2:
+    fig_caption: yes
+    df_print: kable
+# output:
+#   bookdown::pdf_document2:
+#     fig_caption: yes
+#     latex_engine: xelatex
+# header-includes:
+lang: es
+header-includes:
+  - \usepackage{graphicx}
+  - \usepackage{fancyhdr}
+  - \usepackage{caption}
+  - \addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+  - \pagestyle{fancy}
+  - \fancyhf{}
+  - \renewcommand{\headrulewidth}{0.5pt}
+  - \renewcommand{\footrulewidth}{0.4pt}
 ---
+
+# Documento RMarkdown con Referencias en Español
+
+**IMPORTANTE**: `dejar siempre al menos una línea entre la celda de código y el texto Rmarkdown. Sino no pondrá correctamente las referencias`
 
 ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN
 AL ESQUELETO mdpi modificado
@@ -117,3 +142,19 @@ tabla_componentes
 
 ```
 
+Una vez procesados los datos, resulta fundamental comprender temporalmente cómo interactúan los usuarios con la plataforma. 
+
+```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
+grafico_dias <- logs %>%
+  ggplot(aes(x = dia_semana)) +
+  geom_bar(fill = "steelblue", color = "black") +
+  labs(
+    title = "Figura 1: Actividad en el Aula Virtual por día de la semana",
+    x = "Día de la semana",
+    y = "Cantidad de eventos") 
+
+grafico_dias
+```
+
+La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el aula virtual por día de la semana.
+Como se puede observar, existe una mayor actividad en los dias lectivos, que los dias de fin de semana.
