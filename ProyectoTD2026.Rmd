@@ -1,6 +1,6 @@
 ---
-title: "Ejemplo de Tabla y Figura en RMarkdown"
-author: "Marcelino Martínez Sober"
+title: "PROYECTO TD 2026: FASE 1"
+author: "1º GCD, Tratamiento de los Datos"
 date: "`r Sys.Date()`"
 output:
   bookdown::pdf_document2:
