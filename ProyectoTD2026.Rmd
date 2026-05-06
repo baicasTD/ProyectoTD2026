@@ -24,22 +24,27 @@ header-includes:
   - \fancyhf{}
   - \renewcommand{\headrulewidth}{0.5pt}
   - \renewcommand{\footrulewidth}{0.4pt}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 # Documento RMarkdown con Referencias en Español
 
-**IMPORTANTE**: `dejar siempre al menos una línea entre la celda de código`
+**IMPORTANTE**:
+`dejar siempre al menos una línea entre la celda de código`
 `y el texto Rmarkdown. Sino no pondrá correctamente las referencias`
 
-ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA INFORMACIÓN
-AL ESQUELETO mdpi modificado
-https://aulavirtual.uv.es/mod/resource/view.php?id=3579580
+ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA
+INFORMACIÓN AL ESQUELETO mdpi modificado
+<https://aulavirtual.uv.es/mod/resource/view.php?id=3579580>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #LIBRERÍAS
+
 ```{r}
 ###REVISAR EL ARCHIVO paketes.R
 library(readr)
@@ -62,47 +67,46 @@ logdata <- read_csv("data/logs_moodle_anon.csv",
 #head(logdata)
 #tail(logdata)
 ```
-El conjunto de datos inicial consta de 109746 registros y 9 variables, 
-correspondientes a eventos de la plataforma Moodle. 
-Las variables incluyen información temporal, de usuario y de contexto del evento.
+
+El conjunto de datos inicial consta de 109746 registros y 9 variables,
+correspondientes a eventos de la plataforma Moodle. Las variables
+incluyen información temporal, de usuario y de contexto del evento.
 
 #INTRODUCCIÓN
 
-  La plataforma Moodle se ha vuelto el corazón de la universidad. 
-Lo más interesante es que sin darnos cuenta dejamos huella en ella cada vez que
+La plataforma Moodle se ha vuelto el corazón de la universidad. Lo más
+interesante es que sin darnos cuenta dejamos huella en ella cada vez que
 entramos. Nuestro equipo va a sacar información de ese caos de datos.
 
 Econtraremos números y registros brutos que no hay quien los entienda.
 
-¡Pero con el curso de Tratamiento de Datos estamos adquieriendo la capacidad de 
-conseguirlo!
+¡Pero con el curso de Tratamiento de Datos estamos adquieriendo la
+capacidad de conseguirlo!
 
 Nos centraremos en tres apartados:
 
-   Filtrar y ordenar los datos para tratar datos reales.
-   
-   Obtener conclusiones de los datos gracias a la información substraida.
-   
-   Graficar y crear dashboards fáciles de entender para el ojo humano.
-   
-El objetivo es que los profesores dejen de trabajar a ciegas.
-Con estos datos en mano podrán organizar las clases y los materiales sabiendo
-cómo interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
+Filtrar y ordenar los datos para tratar datos reales.
+
+Obtener conclusiones de los datos gracias a la información substraida.
+
+Graficar y crear dashboards fáciles de entender para el ojo humano.
+
+El objetivo es que los profesores dejen de trabajar a ciegas. Con estos
+datos en mano podrán organizar las clases y los materiales sabiendo cómo
+interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 #PREGUNTAS A RESPONDER:
 
- 1.  ¿A qué hora del día se conetan más los alumnos?
- 
- 2.  ¿Qué días de la semana hay menos actividad en la plataforma? 
- 
- 3.  ¿Cuáles son los materiales o apartados que casi nadie utiliza?
- 
- 4.  ¿Los alumnos entran a Moodle antes de que empiece la clase o después?
- 
- 5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
- 
+1.  ¿A qué hora del día se conetan más los alumnos?
 
-  
+2.  ¿Qué días de la semana hay menos actividad en la plataforma?
+
+3.  ¿Cuáles son los materiales o apartados que casi nadie utiliza?
+
+4.  ¿Los alumnos entran a Moodle antes de que empiece la clase o
+    después?
+
+5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
 
 #PROCESAMIENTO:
 
@@ -204,10 +208,12 @@ knitr::kable(
   booktabs = TRUE
 )
 ```
-La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por componentes.
 
-Una vez procesados los datos, resulta fundamental comprender temporalmente cómo 
-interactúan los usuarios con la plataforma. 
+La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por
+componentes.
+
+Una vez procesados los datos, resulta fundamental comprender
+temporalmente cómo interactúan los usuarios con la plataforma.
 
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
 
@@ -222,10 +228,10 @@ grafico_dias <- logs %>%
 grafico_dias
 ```
 
-La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el
-aula virtual por día de la semana.
-Como se puede observar, existe una mayor actividad en los dias lectivos, 
-que los dias de fin de semana.
+La Figura \@ref(fig:figura-actividad) muestra la actividad de los
+alumnos en el aula virtual por día de la semana. Como se puede observar,
+existe una mayor actividad en los dias lectivos, que los dias de fin de
+semana.
 
 #ANÁLISIS TEMPORAL:
 
@@ -242,11 +248,12 @@ knitr::kable(
 )
 ```
 
-La tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que los usuarios 
-interactúan más con la plataforma. Esto permite identificar franjas horarias 
-de mayor y menor uso.
+La tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que
+los usuarios interactúan más con la plataforma. Esto permite identificar
+franjas horarias de mayor y menor uso.
 
-#APLICADO A  
+#APLICADO A
+
 ```{r figura-horas, fig.cap = "Actividad en el Aula Virtual por hora del día"}
 logs %>%
   ggplot(aes(x = hora_dia)) +
@@ -257,7 +264,64 @@ logs %>%
   ) +
   theme_minimal()
 ```
-La Figura \@ref(fig:figura-horas) muestra la evolución temporal de la 
-actividad durante el curso. La línea roja representa la tendencia general. 
-Se pueden apreciar picos de actividad que coinciden con fechas próximas 
-a entregas o evaluaciones.
+
+La Figura \@ref(fig:figura-horas) muestra la evolución temporal de la
+actividad durante el curso. La línea roja representa la tendencia
+general. Se pueden apreciar picos de actividad que coinciden con fechas
+próximas a entregas o evaluaciones.
+
+# PROCESAMIENTO DE CONEXIONES RESPECTO AL HORARIO DE CLASES
+
+```{r tabla-antes-despues}
+
+logs_clase <- logs %>%
+  # Filtramos solo días lectivos (Lunes a Viernes)
+  filter(wday(hora, week_start = 1) %in% 1:5) %>%  
+  mutate(
+    franja = case_when(
+      hora_dia < 9                  ~ "Antes de clase (00:00-08:59)",
+      hora_dia >= 9 & hora_dia < 14 ~ "Durante clase (09:00-13:59)",
+      hora_dia >= 14                ~ "Después de clase (14:00-23:59)"
+    ),
+    franja = factor(franja, levels = c(
+      "Antes de clase (00:00-08:59)",
+      "Durante clase (09:00-13:59)",
+      "Después de clase (14:00-23:59)"
+    ))
+  )
+
+tabla_franjas <- logs_clase %>%
+  group_by(franja) %>%
+  summarise(Frecuencia = n()) %>%
+  mutate(Porcentaje = round(Frecuencia / sum(Frecuencia) * 100, 2)) 
+
+tabla_franjas
+```
+
+
+
+La Tabla \@ref(tab:tabla-antes-despues) muestra la distribución de eventos 
+según la franja horaria en días lectivos. Permite identificar si los alumnos 
+acceden a la plataforma principalmente antes, durante o después del horario 
+de clase (09:00-14:00).
+
+```{r grafico-franjas, fig.cap = "Conexiones al Aula Virtual según horario de clase"}
+
+grafico_clase <- tabla_franjas %>%
+  ggplot(aes(x = franja, y = Frecuencia)) +
+  geom_col(fill = "steelblue", color = "black") + 
+  labs(
+    title = "Actividad en el Aula Virtual respecto a las clases",
+    x = "Franja horaria",
+    y = "Número de eventos"
+  ) +
+  theme_minimal() 
+
+grafico_clase
+```
+
+La Figura \@ref(fig:figura-antes-despues) muestra que la mayor parte de la 
+actividad se concentra en el horario de clase. Como se puede observar, 
+los alumnos acceden principalmente en clase, lo que sugiere que 
+utilizan el Aula Virtual para seguir o completar tareas en las sesiones 
+presenciales.
