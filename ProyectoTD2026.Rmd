@@ -325,3 +325,27 @@ actividad se concentra en el horario de clase. Como se puede observar,
 los alumnos acceden principalmente en clase, lo que sugiere que 
 utilizan el Aula Virtual para seguir o completar tareas en las sesiones 
 presenciales.
+
+## PREGUNTA 5
+```{r}
+# USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
+
+tabla_usuario_nocturno <- logs %>%
+  filter(hora_dia >= 1 & hora_dia < 5) %>%
+  group_by(usuario) %>%
+  summarise(Conexiones = n()) %>%
+  arrange(desc(Conexiones)) %>%
+  head(5) %>%
+  rename(Usuario = usuario)
+
+knitr::kable(
+  tabla_usuario_nocturno,
+  caption = "Usuarios con más conexiones entre las 01:00 y las 05:00",
+  booktabs = TRUE
+)
+```
+
+La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usarios que más 
+veces se han conectado a la plataforma en la franja horaria de madrugada 
+(01:00-05:00). Esto permite identificar qué usuario tiene un uso más 
+atípico de la plataforma fuera del horario habitual académico.
