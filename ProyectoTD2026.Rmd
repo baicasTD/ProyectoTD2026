@@ -3,10 +3,10 @@ title: "PROYECTO TD 2026: FASE 1"
 author: "1º GCD, Tratamiento de los Datos"
 date: "`r Sys.Date()`"
 output:
-  bookdown::pdf_document2:
+  bookdown::html_document2:
     fig_caption: yes
     df_print: kable
-  bookdown::html_document2:
+  bookdown::pdf_document2:
     fig_caption: yes
     df_print: kable
 # output:
@@ -187,7 +187,7 @@ na_por_variable <- logs %>%
 na_por_variable
 ```
 
-#CREACIÓN DE LA TABLA:
+#TABLA DE FRECUENCIA SEGÚN APARTADOS DEL AULA VIRTUAL:
 
 ```{r tabla-componentes}
 
@@ -202,12 +202,7 @@ knitr::kable(
   tabla_componentes,
   caption = "Apartados más visitados del Aula Virtual.",
   booktabs = TRUE
-) %>%
-  kable_styling(
-    latex_options = "scale_down",
-    font_size = 9
-  )
-
+)
 ```
 La Tabla \@ref(tab:tabla-componentes) muestra el ranking de uso por componentes.
 
@@ -231,3 +226,38 @@ La Figura \@ref(fig:figura-actividad) muestra la actividad de los alumnos en el
 aula virtual por día de la semana.
 Como se puede observar, existe una mayor actividad en los dias lectivos, 
 que los dias de fin de semana.
+
+#ANÁLISIS TEMPORAL:
+
+```{r tabla-analisistemp}
+# Actividad por hora del día
+tabla_actividad_hora<- logs %>%
+  count(hora_dia) %>%
+  rename(hora = hora_dia, eventos = n)
+
+knitr::kable(
+  tabla_actividad_hora,
+  caption = "Interacción en el aula virtual en diferentes horas",
+  booktabs = TRUE
+)
+```
+
+La tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que los usuarios 
+interactúan más con la plataforma. Esto permite identificar franjas horarias 
+de mayor y menor uso.
+
+#APLICADO A  
+```{r figura-horas, fig.cap = "Actividad en el Aula Virtual por hora del día"}
+logs %>%
+  ggplot(aes(x = hora_dia)) +
+  geom_bar(fill = "darkblue", color = "black") +
+  scale_x_continuous(breaks = 0:23) + labs(
+    x = "Hora del día",
+    y = "Número de eventos"
+  ) +
+  theme_minimal()
+```
+La Figura \@ref(fig:figura-horas) muestra la evolución temporal de la 
+actividad durante el curso. La línea roja representa la tendencia general. 
+Se pueden apreciar picos de actividad que coinciden con fechas próximas 
+a entregas o evaluaciones.
