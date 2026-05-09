@@ -190,7 +190,7 @@ na_por_variable <- logs %>%
 
 na_por_variable
 ```
-
+# PREGUNTA 3:
 #TABLA DE FRECUENCIA SEGÚN APARTADOS DEL AULA VIRTUAL:
 
 ```{r tabla-componentes}
@@ -215,6 +215,7 @@ componentes.
 Una vez procesados los datos, resulta fundamental comprender
 temporalmente cómo interactúan los usuarios con la plataforma.
 
+#PREGUNTA 2:
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
 
 grafico_dias <- logs %>%
@@ -232,6 +233,7 @@ La Figura \@ref(fig:figura-actividad) muestra la actividad de los
 alumnos en el aula virtual por día de la semana. Como se puede observar,
 existe una mayor actividad en los dias lectivos, que los dias de fin de
 semana.
+
 
 #ANÁLISIS TEMPORAL:
 
@@ -251,7 +253,7 @@ knitr::kable(
 La tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que
 los usuarios interactúan más con la plataforma. Esto permite identificar
 franjas horarias de mayor y menor uso.
-
+#PREGUNTA 1
 #APLICADO A
 
 ```{r figura-horas, fig.cap = "Actividad en el Aula Virtual por hora del día"}
@@ -269,7 +271,7 @@ La Figura \@ref(fig:figura-horas) muestra la evolución temporal de la
 actividad durante el curso. La línea roja representa la tendencia
 general. Se pueden apreciar picos de actividad que coinciden con fechas
 próximas a entregas o evaluaciones.
-
+# PREGUNTA 4:
 # PROCESAMIENTO DE CONEXIONES RESPECTO AL HORARIO DE CLASES
 
 ```{r tabla-antes-despues}
