@@ -108,6 +108,11 @@ interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
 
+6. ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles 
+generan mayor carga en el sistema?
+
+
+
 #PROCESAMIENTO:
 
 ```{r}
@@ -351,3 +356,107 @@ La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usarios que más
 veces se han conectado a la plataforma en la franja horaria de madrugada 
 (01:00-05:00). Esto permite identificar qué usuario tiene un uso más 
 atípico de la plataforma fuera del horario habitual académico.
+
+#PREGUNTA 6:
+
+```{r tabla-eventos, fig.cap = "Eventos más frecuentes registrados en Moodle"}
+tabla_eventos <- logs %>%
+  group_by(evento) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia)) %>%
+  rename(Evento = evento)
+
+knitr::kable(
+  tabla_eventos,
+  caption = "Eventos más frecuentes registrados en Moodle",
+  booktabs = TRUE
+)
+``` 
+
+```{r subanalisis-modulo, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
+# filtramos solo los registros del evento "Módulo de curso visto". Para diferenciar
+tabla_modulos_vistos <- logs %>%
+  filter(evento == "Módulo de curso visto") %>%
+  group_by(componente) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia)) %>%
+  rename(Componente = componente)
+
+knitr::kable(
+  tabla_modulos_vistos,
+  caption = "Tipos de módulo más vistos dentro del Aula Virtual",
+  booktabs = TRUE
+)
+
+```
+
+La Tabla \@ref(tab:subanalisis-modulo) muestra qué componentes específicos 
+se visitan con mayor frecuencia dentro del evento “Módulo de curso visto”.
+Cada registro de este tipo representa una visualización de
+un recurso o actividad dentro de un curso 
+de Moodle (por ejemplo, tareas, cuestionarios, foros o archivos).
+
+Este análisis complementa la Figura \@ref(fig:grafico-eventos) 
+al revelar qué tipo de materiales concentran la atención de los estudiantes.
+Si los módulos más vistos son tareas o cuestionarios, indica un uso orientado 
+a la evaluación; si predominan los recursos o páginas, sugiere un enfoque 
+más informativo.
+
+Visualización de los datos:
+
+```{r grafico-eventos, fig.cap = "Distribución de los eventos más frecuentes en Moodle"}
+logs %>%
+  count(evento) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 15) %>%   # mostramos los 15 más frecuentes para mayor claridad
+  ggplot(aes(x = reorder(evento, n), y = n)) +
+  geom_col(fill = "steelblue", color = "black") +
+  coord_flip() +
+  labs(
+    title = "Eventos más frecuentes en Moodle",
+    x = "Tipo de evento",
+    y = "Número de registros"
+  ) +
+  theme_minimal()
+
+```
+Visualización de los datos "Módulo de curso visto":
+
+```{r grafico-modulos-vistos, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
+logs %>%
+  filter(evento == "Módulo de curso visto") %>%
+  count(componente) %>%
+  arrange(desc(n)) %>%
+  slice_head(n = 15) %>%   # mostramos los 15 más frecuentes
+  ggplot(aes(x = reorder(componente, n), y = n)) +
+  geom_col(fill = "darkblue", color = "black") +
+  coord_flip() +
+  labs(
+    title = "Tipos de módulo más vistos dentro del Aula Virtual",
+    x = "Componente",
+    y = "Número de visualizaciones"
+  ) +
+  theme_minimal()
+
+```
+La Figura \@ref(fig:grafico-modulos-vistos) complementa la tabla anterior 
+mostrando visualmente qué tipos de módulos son más consultados dentro 
+del evento “Módulo de curso visto”.
+Este gráfico permite identificar de forma clara si los estudiantes acceden
+más a:
+
+recursos (PDF, páginas, archivos),
+
+tareas,
+
+cuestionarios,
+
+foros,
+
+o cualquier otro componente del curso.
+
+Este análisis ayuda a comprender qué materiales son realmente utilizados y 
+cuáles podrían requerir revisión, reorganización o mejora 
+por parte del profesorado.
+
+
