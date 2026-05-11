@@ -108,10 +108,11 @@ interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
 
-6. ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles 
-generan mayor carga en el sistema?
+6.  ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles 
+       generan mayor carga en el sistema?
 
-
+7.  ¿Qué tipo de dispositivo o método de acceso utilizan más los alumnos...
+       (web, móvil, app, API, etc.)?
 
 #PROCESAMIENTO:
 
@@ -390,13 +391,13 @@ knitr::kable(
 
 ```
 
-La Tabla \@ref(tab:subanalisis-modulo) muestra qué componentes específicos 
+La Tabla\@ref(tab:subanalisis-modulo) muestra qué componentes específicos 
 se visitan con mayor frecuencia dentro del evento “Módulo de curso visto”.
 Cada registro de este tipo representa una visualización de
 un recurso o actividad dentro de un curso 
 de Moodle (por ejemplo, tareas, cuestionarios, foros o archivos).
 
-Este análisis complementa la Figura \@ref(fig:grafico-eventos) 
+Este análisis complementa la Figura\@ref(fig:grafico-eventos) 
 al revelar qué tipo de materiales concentran la atención de los estudiantes.
 Si los módulos más vistos son tareas o cuestionarios, indica un uso orientado 
 a la evaluación; si predominan los recursos o páginas, sugiere un enfoque 
@@ -439,7 +440,7 @@ logs %>%
   theme_minimal()
 
 ```
-La Figura \@ref(fig:grafico-modulos-vistos) complementa la tabla anterior 
+La Figura\@ref(fig:grafico-modulos-vistos) complementa la tabla anterior 
 mostrando visualmente qué tipos de módulos son más consultados dentro 
 del evento “Módulo de curso visto”.
 Este gráfico permite identificar de forma clara si los estudiantes acceden
@@ -459,4 +460,61 @@ Este análisis ayuda a comprender qué materiales son realmente utilizados y
 cuáles podrían requerir revisión, reorganización o mejora 
 por parte del profesorado.
 
+#PREGUNTA 7:
 
+```{r tabla-origen, fig.cap = "Origen de los accesos a Moodle"}
+tabla_origen <- logs %>%
+  group_by(origen) %>%
+  summarise(Frecuencia = n()) %>%
+  arrange(desc(Frecuencia)) %>%
+  rename(Origen = origen)
+
+knitr::kable(
+  tabla_origen,
+  caption = "Origen de los accesos a Moodle",
+  booktabs = TRUE
+)
+
+```
+
+La Tabla \@ref(tab:tabla-origen) muestra la distribución de accesos según
+el tipo de dispositivo o método de entrada utilizado por los estudiantes.
+La variable origen permite distinguir si los usuarios acceden desde:
+
+navegadores web,
+
+dispositivos móviles,
+
+la app oficial,
+
+servicios internos o API,
+
+u otros métodos de conexión.
+
+Este análisis revela cómo interactúan realmente los alumnos con la plataforma, 
+lo cual es útil para adaptar materiales, mejorar la accesibilidad
+y comprender hábitos digitales.
+
+Visualización:
+
+```{r grafico-origen, fig.cap = "Distribución de accesos según el origen del dispositivo"}
+logs %>%
+  count(origen) %>%
+  arrange(desc(n)) %>%
+  ggplot(aes(x = reorder(origen, n), y = n)) +
+  geom_col(fill = "steelblue", color = "black") +
+  coord_flip() +
+  labs(
+    title = "Origen de los accesos a Moodle",
+    x = "Tipo de acceso",
+    y = "Número de eventos"
+  ) +
+  theme_minimal()
+
+```
+La Figura \@ref(fig:grafico-origen) permite visualizar de forma clara qué 
+métodos de acceso son los más utilizados.
+Si predominan los accesos desde navegador web, indica un uso más tradicional 
+desde ordenador; si destacan los accesos móviles, sugiere que los estudiantes 
+consultan Moodle en movimiento o fuera del aula.
+Nuestra conclusión es muy clara. Predomina el uso web... 
