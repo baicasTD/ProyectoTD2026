@@ -78,9 +78,9 @@ La plataforma Moodle se ha vuelto el corazón de la universidad. Lo más
 interesante es que sin darnos cuenta dejamos huella en ella cada vez que
 entramos. Nuestro equipo va a sacar información de ese caos de datos.
 
-Econtraremos números y registros brutos que no hay quien los entienda.
+Encontraremos números y registros brutos que no hay quien los entienda.
 
-¡Pero con el curso de Tratamiento de Datos estamos adquieriendo la
+¡Pero con el curso de Tratamiento de Datos estamos adqui-riendo la
 capacidad de conseguirlo!
 
 Nos centraremos en tres apartados:
@@ -97,7 +97,7 @@ interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 #PREGUNTAS A RESPONDER:
 
-1.  ¿A qué hora del día se conetan más los alumnos?
+1.  ¿A qué hora del día se concentran más los alumnos?
 
 2.  ¿Qué días de la semana hay menos actividad en la plataforma?
 
@@ -160,7 +160,7 @@ procesar_logs_moodle <- function(logdata) {
       dia_semana = wday(hora, label = TRUE)
     )
 
-  # Ordeno los registros por fecha y hora de más antigup a más reciente
+  # Ordeno los registros por fecha y hora de más antiguo a más reciente
   logdata <- logdata %>%
     arrange(hora)
 
@@ -338,7 +338,7 @@ utilizan el Aula Virtual para seguir o completar tareas en las sesiones
 presenciales.
 
 ## PREGUNTA 5
-```{r tabla-usuario-nocturno, fig.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00}
+```{r tabla-usuario-nocturno, tab.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
 
 tabla_usuario_nocturno <- logs %>%
@@ -356,7 +356,7 @@ knitr::kable(
 )
 ```
 
-La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usarios que más 
+La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usuarios que más 
 veces se han conectado a la plataforma en la franja horaria de madrugada 
 (01:00-05:00). Esto permite identificar qué usuario tiene un uso más 
 atípico de la plataforma fuera del horario habitual académico.
@@ -377,7 +377,7 @@ knitr::kable(
 )
 ``` 
 
-```{r subanalisis-modulo, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
+```{r grafica-modulo, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
 # filtramos solo los registros del evento "Módulo de curso visto". Para diferenciar
 tabla_modulos_vistos <- logs %>%
   filter(evento == "Módulo de curso visto") %>%
@@ -391,7 +391,7 @@ knitr::kable(
   caption = "Tipos de módulo más vistos dentro del Aula Virtual",
   booktabs = TRUE
 )
-
+  
 ```
 
 La Tabla\@ref(tab:subanalisis-modulo) muestra qué componentes específicos 
