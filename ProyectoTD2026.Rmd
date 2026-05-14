@@ -113,6 +113,9 @@ interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 7.  ¿Qué tipo de dispositivo o método de acceso utilizan más los alumnos...
        (web, móvil, app, API, etc.)?
+       
+8.  ¿Qué acciones realiza más el usuario dentre del componente Sistema?
+
 
 #PROCESAMIENTO:
 
@@ -335,7 +338,7 @@ utilizan el Aula Virtual para seguir o completar tareas en las sesiones
 presenciales.
 
 ## PREGUNTA 5
-```{r}
+```{r tabla-usuario-nocturno, fig.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
 
 tabla_usuario_nocturno <- logs %>%
@@ -518,3 +521,33 @@ Si predominan los accesos desde navegador web, indica un uso más tradicional
 desde ordenador; si destacan los accesos móviles, sugiere que los estudiantes 
 consultan Moodle en movimiento o fuera del aula.
 Nuestra conclusión es muy clara. Predomina el uso web... 
+
+#PREGUNTA 8: # Qué acciones realiza más el usuario dentre del componente Sistema?
+```{r acciones-usuarios-sistema, fig.cap= "Acciones más frecuentes dentro del componente Sistema"} 
+sistema_eventos <- logdata %>%
+  filter(Componente == "Sistema") %>%
+  group_by(`Nombre evento`) %>%
+  summarise(total = n()) %>%
+  arrange(desc(total)) %>%
+  slice(1:10)
+
+# Gráfico
+ggplot(sistema_eventos, aes(x = reorder(`Nombre evento`, total), y = total)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = total), hjust = -0.1, size = 4) +
+  coord_flip() +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Acciones más frecuentes dentro del componente Sistema",
+    x = NULL,
+    y = "Número de eventos"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "none",
+    axis.text.y = element_text(size = 11),
+    
+    panel.grid.major.y = element_blank()
+  )
+```
+La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
