@@ -346,7 +346,7 @@ utilizan el Aula Virtual para seguir o completar tareas en las sesiones
 presenciales.
 
 ## PREGUNTA 5
-```{r tabla-usuario-nocturno, tab.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00}
+```{r tabla-usuario-nocturno, tab.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00"}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
 
 tabla_usuario_nocturno <- logs %>%
