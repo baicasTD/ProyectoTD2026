@@ -269,7 +269,7 @@ temporalmente cómo interactúan los usuarios con la plataforma.
 
 # Pregunta 4: Acceso Respecto al Horario de Clases
 
-## Procesamiento de Conexiones Respecto al Horario de Clases
+# Procesamiento de Conexiones Respecto al Horario de Clases
 
 ```{r tabla-antes-despues}
 
@@ -309,7 +309,7 @@ de clase (09:00-14:00).
 
 
 
-## Pregunta 5: Usuario con Más Conexiones de Madrugada
+# Pregunta 5: Usuario con Más Conexiones de Madrugada
 
 ```{r tabla-usuario-nocturno}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
@@ -499,7 +499,7 @@ registra cada vez que un usuario accede a la página principal de la asignatura.
 
 # Pregunta 9: Usuarios con Baja Actividad
 
-## Usuarios con Muy Baja Actividad (menos de 5 registros)
+# Usuarios con Muy Baja Actividad (menos de 5 registros)
 
 ```{r}
 usuarios_poco_activos <- logs %>%
@@ -517,7 +517,7 @@ knitr::kable(
 
 # Pregunta 10: Comparativa Lectivos vs. Fin de Semana
 
-## Comparativa Días Lectivos vs Fin de Semana
+# Comparativa Días Lectivos vs Fin de Semana
 
 ```{r}
 errores_sistema <- logs %>%
