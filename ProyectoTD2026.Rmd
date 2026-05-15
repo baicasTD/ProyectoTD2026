@@ -110,6 +110,8 @@ incluyen información temporal, de usuario y de contexto del evento.
 6.  ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles generan mayor carga en el sistema?
 7.  ¿Qué tipo de dispositivo o método de acceso utilizan más los alumnos (web, móvil, app, API, etc.)?
 8.  ¿Qué acciones realiza más el usuario dentro del componente Sistema?
+9.  Usuarios con menos actividad.
+10. Diferencia de actividad en días lectivos y no lectivos.
 
 # Procesamiento
 
