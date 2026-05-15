@@ -73,6 +73,9 @@ interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
 # Librerías
 
+readr, dplyr, lubridate, stringr, forcats, tidyr, rticles, kableExtra, ggplot2
+bookdown.
+
 ```{r}
 ###REVISAR EL ARCHIVO paketes.R
 library(readr)
