@@ -211,7 +211,7 @@ logs %>%
   ggplot(aes(x = hora_dia)) +
   geom_bar(fill = "darkblue", color = "black") +
   scale_x_continuous(breaks = 0:23) + labs(
-    x = "Hora del día",
+    x = "Hora del día",f
     y = "Número de eventos"
   ) +
   theme_minimal()
@@ -560,3 +560,41 @@ ggplot(sistema_eventos, aes(x = reorder(`Nombre evento`, total), y = total)) +
   )
 ```
 La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
+
+La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
+
+# Pregunta 9 
+
+## Usuarios con muy baja actividad (menos de 5 registros)
+
+```{r}
+usuarios_poco_activos <- logs %>%
+  group_by(usuario) %>%
+  summarise(Total = n()) %>%
+  filter(Total < 5) %>%
+  arrange(Total)
+
+knitr::kable(
+  usuarios_poco_activos,
+  caption = "Usuarios con actividad mínima en la plataforma",
+  booktabs = TRUE
+)
+```
+# Pregunta 10
+
+## Comparativa Días Lectivos vs Fin de Semana
+
+```{r}
+errores_sistema <- logs %>%
+  mutate(es_error = if_else(str_detect(tolower(evento), "error|fail|exception"), "Error/Fallo", "Éxito")) %>%
+  group_by(es_error) %>%
+  summarise(Total = n()) %>%
+  mutate(Porcentaje = round(Total / sum(Total) * 100, 2))
+
+knitr::kable(
+  errores_sistema,
+  caption = "Proporción de errores frente a accesos exitosos",
+  booktabs = TRUE
+)
+
+```
