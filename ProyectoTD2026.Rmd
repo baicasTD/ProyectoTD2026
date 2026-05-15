@@ -5,13 +5,6 @@ author: "1º GCD, Tratamiento de los Datos"
 date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 lang: es
 output:
-  bookdown::pdf_document2:
-    fig_caption: true
-    df_print: kable
-    toc: true
-    toc_depth: 3
-    number_sections: true
-    latex_engine: xelatex
   bookdown::html_document2:
     fig_caption: true
     df_print: kable
@@ -20,6 +13,13 @@ output:
     number_sections: true
     theme: flatly
     highlight: tango
+  bookdown::pdf_document2:
+    fig_caption: true
+    df_print: kable
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
 header-includes:
   - \setkeys{Gin}{width=\linewidth,keepaspectratio}
   - \usepackage{graphicx}
@@ -33,7 +33,7 @@ header-includes:
   - \addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
   - \addto\captionsspanish{\renewcommand{\figurename}{Figura}}
   - \addto\captionsspanish{\renewcommand{\contentsname}{Índice}}
-  - \onehalfspacing
+  - \singlespacing
   - \pagestyle{fancy}
   - \fancyhf{}
   - \fancyhead[L]{\small\textit{\leftmark}}
@@ -240,24 +240,7 @@ alumnos en el aula virtual por día de la semana. Como se puede observar,
 existe una mayor actividad en los días lectivos que en los días de fin de
 semana.
 
-## Análisis Temporal
 
-```{r tabla-analisistemp}
-# Actividad por hora del día
-tabla_actividad_hora<- logs %>%
-  count(hora_dia) %>%
-  rename(hora = hora_dia, eventos = n)
-
-knitr::kable(
-  tabla_actividad_hora,
-  caption = "Interacción en el aula virtual en diferentes horas",
-  booktabs = TRUE
-)
-```
-
-La Tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que
-los usuarios interactúan más con la plataforma. Esto permite identificar
-franjas horarias de mayor y menor uso.
 
 # Pregunta 3: Apartados Menos Utilizados
 
@@ -267,6 +250,7 @@ tabla_componentes <- logs %>%
   group_by(componente) %>%
   summarise(Frecuencia = n()) %>%
   arrange(desc(Frecuencia)) %>%
+  head(5) %>%
   rename(Componente = componente)
 
 
@@ -285,7 +269,7 @@ temporalmente cómo interactúan los usuarios con la plataforma.
 
 # Pregunta 4: Acceso Respecto al Horario de Clases
 
-## Procesamiento de Conexiones Respecto al Horario de Clases
+# Procesamiento de Conexiones Respecto al Horario de Clases
 
 ```{r tabla-antes-despues}
 
@@ -322,28 +306,10 @@ según la franja horaria en días lectivos. Permite identificar si los alumnos
 acceden a la plataforma principalmente antes, durante o después del horario
 de clase (09:00-14:00).
 
-```{r grafico-franjas, fig.cap = "Conexiones al Aula Virtual según horario de clase"}
 
-grafico_clase <- tabla_franjas %>%
-  ggplot(aes(x = franja, y = Frecuencia)) +
-  geom_col(fill = "steelblue", color = "black") + 
-  labs(
-    title = "Actividad en el Aula Virtual respecto a las clases",
-    x = "Franja horaria",
-    y = "Número de eventos"
-  ) +
-  theme_minimal() 
 
-grafico_clase
-```
 
-La Figura \@ref(fig:grafico-franjas) muestra que la mayor parte de la
-actividad se concentra en el horario de clase. Como se puede observar,
-los alumnos acceden principalmente en clase, lo que sugiere que
-utilizan el Aula Virtual para seguir o completar tareas en las sesiones
-presenciales.
-
-## Pregunta 5: Usuario con Más Conexiones de Madrugada
+# Pregunta 5: Usuario con Más Conexiones de Madrugada
 
 ```{r tabla-usuario-nocturno}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
@@ -378,13 +344,11 @@ tabla_eventos <- logs %>%
   group_by(evento) %>%
   summarise(Frecuencia = n()) %>%
   arrange(desc(Frecuencia)) %>%
+  head(10) %>%
   rename(Evento = evento)
 
-knitr::kable(
-  tabla_eventos,
-  caption = "Eventos más frecuentes registrados en Moodle",
-  booktabs = TRUE
-)
+
+
 ``` 
 
 ```{r grafica-modulo}
@@ -394,21 +358,13 @@ tabla_modulos_vistos <- logs %>%
   group_by(componente) %>%
   summarise(Frecuencia = n()) %>%
   arrange(desc(Frecuencia)) %>%
+  head(10) %>%
   rename(Componente = componente)
 
-knitr::kable(
-  tabla_modulos_vistos,
-  caption = "Tipos de módulo más vistos dentro del Aula Virtual",
-  booktabs = TRUE
-)
+
   
 ```
 
-La Tabla \@ref(tab:grafica-modulo) muestra qué componentes específicos
-se visitan con mayor frecuencia dentro del evento "Módulo de curso visto".
-Cada registro de este tipo representa una visualización de un recurso o
-actividad dentro de un curso de Moodle (por ejemplo, tareas, cuestionarios,
-foros o archivos).
 
 Este análisis complementa la Figura \@ref(fig:grafico-eventos)
 al revelar qué tipo de materiales concentran la atención de los estudiantes.
@@ -501,30 +457,9 @@ Este análisis revela cómo interactúan realmente los alumnos con la plataforma
 lo cual es útil para adaptar materiales, mejorar la accesibilidad
 y comprender hábitos digitales.
 
-Visualización:
 
-```{r grafico-origen, fig.cap = "Distribución de accesos según el origen del dispositivo"}
-logs %>%
-  count(origen) %>%
-  arrange(desc(n)) %>%
-  ggplot(aes(x = reorder(origen, n), y = n)) +
-  geom_col(fill = "steelblue", color = "black") +
-  coord_flip() +
-  labs(
-    title = "Origen de los accesos a Moodle",
-    x = "Tipo de acceso",
-    y = "Número de eventos"
-  ) +
-  theme_minimal()
 
-```
 
-La Figura \@ref(fig:grafico-origen) permite visualizar de forma clara qué
-métodos de acceso son los más utilizados. Si predominan los accesos desde
-navegador web, indica un uso más tradicional desde ordenador; si destacan
-los accesos móviles, sugiere que los estudiantes consultan Moodle en
-movimiento o fuera del aula. Nuestra conclusión es muy clara: predomina el
-uso web.
 
 # Pregunta 8: Acciones dentro del Componente Sistema
 
@@ -564,7 +499,7 @@ registra cada vez que un usuario accede a la página principal de la asignatura.
 
 # Pregunta 9: Usuarios con Baja Actividad
 
-## Usuarios con Muy Baja Actividad (menos de 5 registros)
+# Usuarios con Muy Baja Actividad (menos de 5 registros)
 
 ```{r}
 usuarios_poco_activos <- logs %>%
@@ -582,7 +517,7 @@ knitr::kable(
 
 # Pregunta 10: Comparativa Lectivos vs. Fin de Semana
 
-## Comparativa Días Lectivos vs Fin de Semana
+# Comparativa Días Lectivos vs Fin de Semana
 
 ```{r}
 errores_sistema <- logs %>%
