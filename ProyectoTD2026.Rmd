@@ -1,49 +1,56 @@
 ---
-title: "PROYECTO TD 2026: FASE 1"
+title: "Proyecto TD 2026"
+subtitle: "Análisis de la Actividad en el Aula Virtual Moodle"
 author: "1º GCD, Tratamiento de los Datos"
-date: 
+date: "`r format(Sys.Date(), '%d de %B de %Y')`"
+lang: es
 output:
   bookdown::pdf_document2:
-    fig_caption: yes
+    fig_caption: true
     df_print: kable
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
   bookdown::html_document2:
-    fig_caption: yes
+    fig_caption: true
     df_print: kable
-# output:
-#   bookdown::pdf_document2:
-#     fig_caption: yes
-#     latex_engine: xelatex
-# header-includes:
-lang: es
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    theme: flatly
+    highlight: tango
 header-includes:
+  - \setkeys{Gin}{width=\linewidth,keepaspectratio}
   - \usepackage{graphicx}
+  - \usepackage{booktabs}
   - \usepackage{fancyhdr}
   - \usepackage{caption}
+  - \usepackage{hyperref}
+  - \usepackage{xcolor}
+  - \usepackage{setspace}
+  - \definecolor{uvblue}{RGB}{0,60,120}
   - \addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
+  - \addto\captionsspanish{\renewcommand{\figurename}{Figura}}
+  - \addto\captionsspanish{\renewcommand{\contentsname}{Índice}}
+  - \onehalfspacing
   - \pagestyle{fancy}
   - \fancyhf{}
-  - \renewcommand{\headrulewidth}{0.5pt}
+  - \fancyhead[L]{\small\textit{\leftmark}}
+  - \fancyhead[R]{\small\textit{1\textsuperscript{o} GCD -- Tratamiento de los Datos}}
+  - \fancyfoot[C]{\thepage}
+  - \renewcommand{\headrulewidth}{0.4pt}
   - \renewcommand{\footrulewidth}{0.4pt}
-editor_options: 
-  markdown: 
-    wrap: 72
+  - \hypersetup{colorlinks=true, linkcolor=uvblue, urlcolor=uvblue, citecolor=uvblue}
 ---
 
-# Documento RMarkdown con Referencias en Español
 
-**IMPORTANTE**:
-`dejar siempre al menos una línea entre la celda de código`
-`y el texto Rmarkdown. Sino no pondrá correctamente las referencias`
-
-ESTE RMD SE USARÁ PARA MANIPULAR LOS DATOS, LUEGO PASAREMOS TODA LA
-INFORMACIÓN AL ESQUELETO mdpi modificado
-<https://aulavirtual.uv.es/mod/resource/view.php?id=3579580>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-#INTRODUCCIÓN
+# Introducción
 
 La plataforma Moodle se ha vuelto el corazón de la universidad. Lo más
 interesante es que sin darnos cuenta dejamos huella en ella cada vez que
@@ -51,22 +58,20 @@ entramos. Nuestro equipo va a sacar información de ese caos de datos.
 
 Encontraremos números y registros brutos que no hay quien los entienda.
 
-¡Pero con el curso de Tratamiento de Datos estamos adqui-riendo la
+¡Pero con el curso de Tratamiento de Datos estamos adquiriendo la
 capacidad de conseguirlo!
 
 Nos centraremos en tres apartados:
 
-Filtrar y ordenar los datos para tratar datos reales.
-
-Obtener conclusiones de los datos gracias a la información substraida.
-
-Graficar y crear dashboards fáciles de entender para el ojo humano.
+- Filtrar y ordenar los datos para tratar datos reales.
+- Obtener conclusiones de los datos gracias a la información extraída.
+- Graficar y crear dashboards fáciles de entender para el ojo humano.
 
 El objetivo es que los profesores dejen de trabajar a ciegas. Con estos
 datos en mano podrán organizar las clases y los materiales sabiendo cómo
 interactúan de verdad sus alumnos y no cómo creemos que lo hacen.
 
-#LIBRERÍAS
+# Librerías
 
 ```{r}
 ###REVISAR EL ARCHIVO paketes.R
@@ -81,7 +86,7 @@ library(kableExtra)
 library(ggplot2)
 ```
 
-#CARGA DE DATOS
+# Carga de Datos
 
 ```{r}
 logdata <- read_csv("data/logs_moodle_anon.csv", 
@@ -95,31 +100,18 @@ El conjunto de datos inicial consta de 109746 registros y 9 variables,
 correspondientes a eventos de la plataforma Moodle. Las variables
 incluyen información temporal, de usuario y de contexto del evento.
 
-
-
-#PREGUNTAS A RESPONDER:
+# Preguntas a Responder
 
 1.  ¿A qué hora del día se concentran más los alumnos?
-
 2.  ¿Qué días de la semana hay menos actividad en la plataforma?
-
 3.  ¿Cuáles son los materiales o apartados que casi nadie utiliza?
-
-4.  ¿Los alumnos entran a Moodle antes de que empiece la clase o
-    después?
-
+4.  ¿Los alumnos entran a Moodle antes de que empiece la clase o después?
 5.  ¿Qué usuario se ha conectado más veces entre las 01:00 y 05:00?
+6.  ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles generan mayor carga en el sistema?
+7.  ¿Qué tipo de dispositivo o método de acceso utilizan más los alumnos (web, móvil, app, API, etc.)?
+8.  ¿Qué acciones realiza más el usuario dentro del componente Sistema?
 
-6.  ¿Qué tipo de eventos son los más frecuentes en Moodle y cuáles 
-       generan mayor carga en el sistema?
-
-7.  ¿Qué tipo de dispositivo o método de acceso utilizan más los alumnos...
-       (web, móvil, app, API, etc.)?
-       
-8.  ¿Qué acciones realiza más el usuario dentre del componente Sistema?
-
-
-#PROCESAMIENTO:
+# Procesamiento
 
 ```{r}
 #Definimos una función llamada procesa_logs_moodle. Esta función está diseñada 
@@ -170,7 +162,7 @@ procesar_logs_moodle <- function(logdata) {
 }
 ```
 
-#DATASET LIMPIO:
+## Dataset Limpio
 
 ```{r}
 #Como se veria el dataset ya limpio y organizado
@@ -179,16 +171,16 @@ logs <- procesar_logs_moodle(logdata)
 
 ```
 
-#SUMMARY:
+## Summary
 
 ```{r}
 #Comprobamos que los tipos de las variables son correctos y vemos mediante 
 #summary si sus valores son coherentes.
-summary(logs)
+#summary(logs)
 
 ```
 
-#ANÁLISIS DE NA's:
+## Análisis de NA's
 
 ```{r}
 #Analizamos los datos perdidos(NA) de cada una de las variables del .csv
@@ -201,10 +193,13 @@ na_por_variable <- logs %>%
 
 na_por_variable
 ```
-Faltan algunos datos en el conjunto, pero como la cantidad es insignificante, no necesitamos usar métodos complejos para rellenarlos (imputación). Simplemente los ignoraremos al hacer los cálculos usando funciones como na.rm = TRUE.
 
-#PREGUNTA 1
-#APLICADO A
+Faltan algunos datos en el conjunto, pero como la cantidad es insignificante,
+no necesitamos usar métodos complejos para rellenarlos (imputación).
+Simplemente los ignoraremos al hacer los cálculos usando funciones como
+`na.rm = TRUE`.
+
+# Pregunta 1: Actividad por Hora del Día
 
 ```{r figura-horas, fig.cap = "Actividad en el Aula Virtual por hora del día"}
 logs %>%
@@ -217,20 +212,18 @@ logs %>%
   theme_minimal()
 ```
 
-La Figura \@ref(fig:figura-horas) muestra la evolución temporal de la
-actividad durante el curso. La línea roja representa la tendencia
-general. Se pueden apreciar picos de actividad que coinciden con fechas
-próximas a entregas o evaluaciones.
+La Figura \@ref(fig:figura-horas) muestra la distribución de la actividad
+a lo largo del día. Se pueden apreciar picos de actividad que coinciden
+con fechas próximas a entregas o evaluaciones.
 
+# Pregunta 2: Actividad por Día de la Semana
 
-#PREGUNTA 2:
 ```{r figura-actividad, fig.cap = "Actividad en el aula virtual por día de la semana"}
 
 grafico_dias <- logs %>%
   ggplot(aes(x = dia_semana)) +
   geom_bar(fill = "steelblue", color = "black") +
   labs(
-    title = "Figura 1: Actividad en el Aula Virtual por día de la semana",
     x = "Día de la semana",
     y = "Cantidad de eventos") 
 
@@ -239,11 +232,10 @@ grafico_dias
 
 La Figura \@ref(fig:figura-actividad) muestra la actividad de los
 alumnos en el aula virtual por día de la semana. Como se puede observar,
-existe una mayor actividad en los dias lectivos, que los dias de fin de
+existe una mayor actividad en los días lectivos que en los días de fin de
 semana.
 
-
-#ANÁLISIS TEMPORAL:
+## Análisis Temporal
 
 ```{r tabla-analisistemp}
 # Actividad por hora del día
@@ -258,13 +250,11 @@ knitr::kable(
 )
 ```
 
-La tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que
+La Tabla \@ref(tab:tabla-analisistemp) muestra los momentos en los que
 los usuarios interactúan más con la plataforma. Esto permite identificar
 franjas horarias de mayor y menor uso.
 
-
-# PREGUNTA 3:
-#TABLA DE FRECUENCIA SEGÚN APARTADOS DEL AULA VIRTUAL:
+# Pregunta 3: Apartados Menos Utilizados
 
 ```{r tabla-componentes}
 
@@ -288,8 +278,9 @@ componentes.
 Una vez procesados los datos, resulta fundamental comprender
 temporalmente cómo interactúan los usuarios con la plataforma.
 
-# PREGUNTA 4:
-# PROCESAMIENTO DE CONEXIONES RESPECTO AL HORARIO DE CLASES
+# Pregunta 4: Acceso Respecto al Horario de Clases
+
+## Procesamiento de Conexiones Respecto al Horario de Clases
 
 ```{r tabla-antes-despues}
 
@@ -314,14 +305,16 @@ tabla_franjas <- logs_clase %>%
   summarise(Frecuencia = n()) %>%
   mutate(Porcentaje = round(Frecuencia / sum(Frecuencia) * 100, 2)) 
 
-tabla_franjas
+knitr::kable(
+  tabla_franjas,
+  caption = "Distribución de eventos por franja horaria en días lectivos",
+  booktabs = TRUE
+)
 ```
 
-
-
-La Tabla \@ref(tab:tabla-antes-despues) muestra la distribución de eventos 
-según la franja horaria en días lectivos. Permite identificar si los alumnos 
-acceden a la plataforma principalmente antes, durante o después del horario 
+La Tabla \@ref(tab:tabla-antes-despues) muestra la distribución de eventos
+según la franja horaria en días lectivos. Permite identificar si los alumnos
+acceden a la plataforma principalmente antes, durante o después del horario
 de clase (09:00-14:00).
 
 ```{r grafico-franjas, fig.cap = "Conexiones al Aula Virtual según horario de clase"}
@@ -339,14 +332,15 @@ grafico_clase <- tabla_franjas %>%
 grafico_clase
 ```
 
-La Figura \@ref(fig:figura-antes-despues) muestra que la mayor parte de la 
-actividad se concentra en el horario de clase. Como se puede observar, 
-los alumnos acceden principalmente en clase, lo que sugiere que 
-utilizan el Aula Virtual para seguir o completar tareas en las sesiones 
+La Figura \@ref(fig:grafico-franjas) muestra que la mayor parte de la
+actividad se concentra en el horario de clase. Como se puede observar,
+los alumnos acceden principalmente en clase, lo que sugiere que
+utilizan el Aula Virtual para seguir o completar tareas en las sesiones
 presenciales.
 
-## PREGUNTA 5
-```{r tabla-usuario-nocturno, tab.cap= "Usuarios con más conexiones entre las 01:00 y las 05:00"}
+## Pregunta 5: Usuario con Más Conexiones de Madrugada
+
+```{r tabla-usuario-nocturno}
 # USUARIO CON MÁS CONEXIONES ENTRE 01:00 Y 05:00
 
 tabla_usuario_nocturno <- logs %>%
@@ -364,15 +358,17 @@ knitr::kable(
 )
 ```
 
-La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usuarios que más 
-veces se han conectado a la plataforma en la franja horaria de madrugada 
-(01:00-05:00). Esto permite identificar qué usuario tiene un uso más 
+La Tabla \@ref(tab:tabla-usuario-nocturno) muestra los usuarios que más
+veces se han conectado a la plataforma en la franja horaria de madrugada
+(01:00-05:00). Esto permite identificar qué usuario tiene un uso más
 atípico de la plataforma fuera del horario habitual académico.
-Hemos detectado usuarios con una actividad extrema de madrugada y, para que no distorsionen los promedios generales, hemos decidido separarlos del grupo principal para analizarlos de forma independiente.
+Hemos detectado usuarios con una actividad extrema de madrugada y, para
+que no distorsionen los promedios generales, hemos decidido separarlos
+del grupo principal para analizarlos de forma independiente.
 
-#PREGUNTA 6:
+# Pregunta 6: Eventos Más Frecuentes en Moodle
 
-```{r tabla-eventos, fig.cap = "Eventos más frecuentes registrados en Moodle"}
+```{r tabla-eventos}
 tabla_eventos <- logs %>%
   group_by(evento) %>%
   summarise(Frecuencia = n()) %>%
@@ -386,7 +382,7 @@ knitr::kable(
 )
 ``` 
 
-```{r grafica-modulo, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
+```{r grafica-modulo}
 # filtramos solo los registros del evento "Módulo de curso visto". Para diferenciar
 tabla_modulos_vistos <- logs %>%
   filter(evento == "Módulo de curso visto") %>%
@@ -403,16 +399,16 @@ knitr::kable(
   
 ```
 
-La Tabla\@ref(tab:subanalisis-modulo) muestra qué componentes específicos 
-se visitan con mayor frecuencia dentro del evento “Módulo de curso visto”.
-Cada registro de este tipo representa una visualización de
-un recurso o actividad dentro de un curso 
-de Moodle (por ejemplo, tareas, cuestionarios, foros o archivos).
+La Tabla \@ref(tab:grafica-modulo) muestra qué componentes específicos
+se visitan con mayor frecuencia dentro del evento "Módulo de curso visto".
+Cada registro de este tipo representa una visualización de un recurso o
+actividad dentro de un curso de Moodle (por ejemplo, tareas, cuestionarios,
+foros o archivos).
 
-Este análisis complementa la Figura\@ref(fig:grafico-eventos) 
+Este análisis complementa la Figura \@ref(fig:grafico-eventos)
 al revelar qué tipo de materiales concentran la atención de los estudiantes.
-Si los módulos más vistos son tareas o cuestionarios, indica un uso orientado 
-a la evaluación; si predominan los recursos o páginas, sugiere un enfoque 
+Si los módulos más vistos son tareas o cuestionarios, indica un uso orientado
+a la evaluación; si predominan los recursos o páginas, sugiere un enfoque
 más informativo.
 
 Visualización de los datos:
@@ -433,6 +429,7 @@ logs %>%
   theme_minimal()
 
 ```
+
 Visualización de los datos "Módulo de curso visto":
 
 ```{r grafico-modulos-vistos, fig.cap = "Tipos de módulo más vistos dentro del Aula Virtual"}
@@ -452,29 +449,25 @@ logs %>%
   theme_minimal()
 
 ```
-La Figura\@ref(fig:grafico-modulos-vistos) complementa la tabla anterior 
-mostrando visualmente qué tipos de módulos son más consultados dentro 
-del evento “Módulo de curso visto”.
-Este gráfico permite identificar de forma clara si los estudiantes acceden
-más a:
 
-recursos (PDF, páginas, archivos),
+La Figura \@ref(fig:grafico-modulos-vistos) complementa la tabla anterior
+mostrando visualmente qué tipos de módulos son más consultados dentro
+del evento "Módulo de curso visto". Este gráfico permite identificar de
+forma clara si los estudiantes acceden más a:
 
-tareas,
+- recursos (PDF, páginas, archivos),
+- tareas,
+- cuestionarios,
+- foros,
+- u otros componentes del curso.
 
-cuestionarios,
-
-foros,
-
-o cualquier otro componente del curso.
-
-Este análisis ayuda a comprender qué materiales son realmente utilizados y 
-cuáles podrían requerir revisión, reorganización o mejora 
+Este análisis ayuda a comprender qué materiales son realmente utilizados y
+cuáles podrían requerir revisión, reorganización o mejora
 por parte del profesorado.
 
-#PREGUNTA 7:
+# Pregunta 7: Método de Acceso a Moodle
 
-```{r tabla-origen, fig.cap = "Origen de los accesos a Moodle"}
+```{r tabla-origen}
 tabla_origen <- logs %>%
   group_by(origen) %>%
   summarise(Frecuencia = n()) %>%
@@ -493,17 +486,13 @@ La Tabla \@ref(tab:tabla-origen) muestra la distribución de accesos según
 el tipo de dispositivo o método de entrada utilizado por los estudiantes.
 La variable origen permite distinguir si los usuarios acceden desde:
 
-navegadores web,
+- navegadores web,
+- dispositivos móviles,
+- la app oficial,
+- servicios internos o API,
+- u otros métodos de conexión.
 
-dispositivos móviles,
-
-la app oficial,
-
-servicios internos o API,
-
-u otros métodos de conexión.
-
-Este análisis revela cómo interactúan realmente los alumnos con la plataforma, 
+Este análisis revela cómo interactúan realmente los alumnos con la plataforma,
 lo cual es útil para adaptar materiales, mejorar la accesibilidad
 y comprender hábitos digitales.
 
@@ -524,14 +513,16 @@ logs %>%
   theme_minimal()
 
 ```
-La Figura \@ref(fig:grafico-origen) permite visualizar de forma clara qué 
-métodos de acceso son los más utilizados.
-Si predominan los accesos desde navegador web, indica un uso más tradicional 
-desde ordenador; si destacan los accesos móviles, sugiere que los estudiantes 
-consultan Moodle en movimiento o fuera del aula.
-Nuestra conclusión es muy clara. Predomina el uso web... 
 
-#PREGUNTA 8: # Qué acciones realiza más el usuario dentre del componente Sistema?
+La Figura \@ref(fig:grafico-origen) permite visualizar de forma clara qué
+métodos de acceso son los más utilizados. Si predominan los accesos desde
+navegador web, indica un uso más tradicional desde ordenador; si destacan
+los accesos móviles, sugiere que los estudiantes consultan Moodle en
+movimiento o fuera del aula. Nuestra conclusión es muy clara: predomina el
+uso web.
+
+# Pregunta 8: Acciones dentro del Componente Sistema
+
 ```{r acciones-usuarios-sistema, fig.cap= "Acciones más frecuentes dentro del componente Sistema"} 
 sistema_eventos <- logs %>%
   filter(componente == "Sistema") %>%
@@ -559,13 +550,16 @@ ggplot(sistema_eventos, aes(x = reorder(evento, total), y = total)) +
     panel.grid.major.y = element_blank()
   )
 ```
-La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
 
+La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más
+frecuentes registradas en el sistema, integrando la actividad tanto de
+estudiantes como de personal docente. Como observamos en el gráfico, la
+acción predominante es "Curso Visto" con 20.430 registros; esta acción se
+registra cada vez que un usuario accede a la página principal de la asignatura.
 
+# Pregunta 9: Usuarios con Baja Actividad
 
-# Pregunta 9 
-
-## Usuarios con muy baja actividad (menos de 5 registros)
+## Usuarios con Muy Baja Actividad (menos de 5 registros)
 
 ```{r}
 usuarios_poco_activos <- logs %>%
@@ -580,7 +574,8 @@ knitr::kable(
   booktabs = TRUE
 )
 ```
-# Pregunta 10
+
+# Pregunta 10: Comparativa Lectivos vs. Fin de Semana
 
 ## Comparativa Días Lectivos vs Fin de Semana
 
