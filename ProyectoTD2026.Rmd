@@ -1,12 +1,12 @@
 ---
 title: "PROYECTO TD 2026: FASE 1"
 author: "1º GCD, Tratamiento de los Datos"
-date: "`r Sys.Date()`"
+date: 
 output:
-  bookdown::html_document2:
+  bookdown::pdf_document2:
     fig_caption: yes
     df_print: kable
-  bookdown::pdf_document2:
+  bookdown::html_document2:
     fig_caption: yes
     df_print: kable
 # output:
@@ -211,7 +211,7 @@ logs %>%
   ggplot(aes(x = hora_dia)) +
   geom_bar(fill = "darkblue", color = "black") +
   scale_x_continuous(breaks = 0:23) + labs(
-    x = "Hora del día",f
+    x = "Hora del día",
     y = "Número de eventos"
   ) +
   theme_minimal()
