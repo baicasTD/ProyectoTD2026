@@ -5,13 +5,6 @@ author: "1º GCD, Tratamiento de los Datos"
 date: "`r format(Sys.Date(), '%d de %B de %Y')`"
 lang: es
 output:
-  bookdown::pdf_document2:
-    fig_caption: true
-    df_print: kable
-    toc: true
-    toc_depth: 3
-    number_sections: true
-    latex_engine: xelatex
   bookdown::html_document2:
     fig_caption: true
     df_print: kable
@@ -20,6 +13,13 @@ output:
     number_sections: true
     theme: flatly
     highlight: tango
+  bookdown::pdf_document2:
+    fig_caption: true
+    df_print: kable
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    latex_engine: xelatex
 header-includes:
   - \setkeys{Gin}{width=\linewidth,keepaspectratio}
   - \usepackage{graphicx}
@@ -501,7 +501,7 @@ registra cada vez que un usuario accede a la página principal de la asignatura.
 
 ## Usuarios con Muy Baja Actividad (menos de 5 registros)
 
-```{r acciones-usuarios-sistema, tab.cap = "Acciones más frecuentes dentro del componente Sistema"}
+```{r usuarios-baja-actividad, tab.cap = "Usuarios con actividad mínima en la plataforma"}
 usuarios_poco_activos <- logs %>%
   group_by(usuario) %>%
   summarise(Total = n()) %>%
@@ -515,7 +515,7 @@ knitr::kable(
 )
 ```
 
-Como se puede observar en la Tabla \@ref(tab:acciones-usuarios-sistema), existe un grupo reducido de usuarios que presentan una interacción mínima con el sistema, registrando entre 1 y 3 acciones en total.
+Como se puede observar en la Tabla \@ref(tab:usuarios-baja-actividad), existe un grupo reducido de usuarios que presentan una interacción mínima con el sistema, registrando entre 1 y 3 acciones en total.
 
 # Pregunta 10: Comparativa Lectivos vs. Fin de Semana
 
