@@ -533,15 +533,15 @@ Nuestra conclusión es muy clara. Predomina el uso web...
 
 #PREGUNTA 8: # Qué acciones realiza más el usuario dentre del componente Sistema?
 ```{r acciones-usuarios-sistema, fig.cap= "Acciones más frecuentes dentro del componente Sistema"} 
-sistema_eventos <- logdata %>%
-  filter(Componente == "Sistema") %>%
-  group_by(`Nombre evento`) %>%
+sistema_eventos <- logs %>%
+  filter(componente == "Sistema") %>%
+  group_by(evento) %>%
   summarise(total = n()) %>%
   arrange(desc(total)) %>%
   slice(1:10)
 
 # Gráfico
-ggplot(sistema_eventos, aes(x = reorder(`Nombre evento`, total), y = total)) +
+ggplot(sistema_eventos, aes(x = reorder(evento, total), y = total)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   geom_text(aes(label = total), hjust = -0.1, size = 4) +
   coord_flip() +
@@ -561,7 +561,7 @@ ggplot(sistema_eventos, aes(x = reorder(`Nombre evento`, total), y = total)) +
 ```
 La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
 
-La Figura \@ref(fig:acciones-usuarios-sistema) muestra las interacciones más frecuentes registradas en el sistema, integrando la actividad tanto de estudiantes como de personal docente. Como obsevamos en el gráfico la acción predominante es "Curso Visto" con 20.430 registros, esta acción se registra cada vez que un usario accede a la página principal de la asignatura.
+
 
 # Pregunta 9 
 
